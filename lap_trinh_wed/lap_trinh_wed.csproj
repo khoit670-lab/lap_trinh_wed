@@ -80,6 +80,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Admin\admin_appointment.aspx" />
+    <Content Include="Admin\admin_appointment_detail.aspx" />
+    <Content Include="Admin\admin_dashboard.aspx" />
     <Content Include="assets\anh\Body_Detox_Tan_Mo.jpg" />
     <Content Include="assets\anh\Cham_soc_da.jpg" />
     <Content Include="assets\anh\cham_soc_da_mat_Collagen_Glow.jpg" />
@@ -107,6 +110,27 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\admin_appointment.aspx.cs">
+      <DependentUpon>admin_appointment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_appointment.aspx.designer.cs">
+      <DependentUpon>admin_appointment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\admin_appointment_detail.aspx.cs">
+      <DependentUpon>admin_appointment_detail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_appointment_detail.aspx.designer.cs">
+      <DependentUpon>admin_appointment_detail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\admin_dashboard.aspx.cs">
+      <DependentUpon>admin_dashboard.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_dashboard.aspx.designer.cs">
+      <DependentUpon>admin_dashboard.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="client\booking.aspx.cs">
       <DependentUpon>booking.aspx</DependentUpon>
