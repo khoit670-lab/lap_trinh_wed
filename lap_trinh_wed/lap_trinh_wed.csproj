@@ -94,8 +94,11 @@
     <Content Include="assets\anh\Tri_nam_Laser_Q_Switch.jpg" />
     <Content Include="assets\anh\voucher.png" />
     <Content Include="assets\anh\xam_long_may.jpg" />
+    <Content Include="client\booking.aspx" />
     <Content Include="client\Default.aspx" />
     <Content Include="client\login.aspx" />
+    <Content Include="client\profile.aspx" />
+    <Content Include="client\promotions.aspx" />
     <Content Include="client\register.aspx" />
     <Content Include="client\service-detail.aspx" />
     <Content Include="client\services..aspx" />
@@ -105,6 +108,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="client\booking.aspx.cs">
+      <DependentUpon>booking.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="client\booking.aspx.designer.cs">
+      <DependentUpon>booking.aspx</DependentUpon>
+    </Compile>
     <Compile Include="client\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -118,6 +128,20 @@
     </Compile>
     <Compile Include="client\login.aspx.designer.cs">
       <DependentUpon>login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="client\profile.aspx.cs">
+      <DependentUpon>profile.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="client\profile.aspx.designer.cs">
+      <DependentUpon>profile.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="client\promotions.aspx.cs">
+      <DependentUpon>promotions.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="client\promotions.aspx.designer.cs">
+      <DependentUpon>promotions.aspx</DependentUpon>
     </Compile>
     <Compile Include="client\register.aspx.cs">
       <DependentUpon>register.aspx</DependentUpon>

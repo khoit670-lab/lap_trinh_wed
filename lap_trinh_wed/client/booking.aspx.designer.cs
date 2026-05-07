@@ -11,7 +11,7 @@ namespace lap_trinh_wed.client
 {
 
 
-    public partial class Default
+    public partial class booking
     {
 
         /// <summary>
@@ -76,6 +76,15 @@ namespace lap_trinh_wed.client
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtTime;
+
+        /// <summary>
+        /// txtNote control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtNote;
 
         /// <summary>
         /// btnSubmit control.
