@@ -1,20 +1,21 @@
 ﻿using System;
+using System.Web.UI;
 
 namespace lap_trinh_wed.client
 {
-    public partial class Default : System.Web.UI.Page
+    public partial class Default : Page
     {
-        public string userGreeting = "xin chào!";
+        protected string userGreeting = "";
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
-                if (Session["UserName"] != null)
-                {
-                    userGreeting = "xin chào, " + Session["UserName"].ToString() + "!";
-                }
-            }
+            // Kiểm tra đăng nhập để hiện lời chào
+            if (Session["HoVaTen"] != null)
+                userGreeting = "Xin chào, " + Session["HoVaTen"].ToString();
+            else
+                userGreeting = "Khách";
+
+            // KHÔNG CẦN gọi LoadData() vì HTML đã có sẵn nội dung
         }
     }
 }

@@ -1,48 +1,70 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 
 namespace lap_trinh_wed.client
 {
-    public partial class login : System.Web.UI.Page
+    public partial class login : Page
     {
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            // Code thực thi khi trang được load
-        }
-
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            // Lấy dữ liệu từ các ô nhập liệu
-            string fullName = txtName.Text.Trim();
             string phone = txtPhone.Text.Trim();
             string password = txtPassword.Text.Trim();
 
-            // 1. Kiểm tra rỗng
             if (string.IsNullOrEmpty(phone) || string.IsNullOrEmpty(password))
             {
-                lblMessage.Text = "Vui lòng nhập đầy đủ Số điện thoại và Mật khẩu!";
+                lblMessage.Text = "Vui lòng nhập đầy đủ thông tin.";
                 return;
             }
 
-            // 2. Giả lập logic kiểm tra đăng nhập
-            // Trong thực tế, bạn sẽ truy vấn Database tại đây
-            if (phone == "0987654321" && password == "admin123")
+            try
             {
-                // Lưu thông tin vào Session để dùng ở các trang sau
-                Session["UserPhone"] = phone;
-                Session["UserName"] = fullName;
+                string connStr = ConfigurationManager.ConnectionStrings["LilySpaDB"].ConnectionString;
+                using (SqlConnection conn = new SqlConnection(connStr))
+                {
+                    conn.Open();
+                    string hashInput = HashPassword(password); // Băm mật khẩu nhập vào để so sánh
 
-                // Chuyển hướng sang trang chủ hoặc trang cá nhân
-                Response.Redirect("Default.aspx");
+                    string sql = "SELECT * FROM khach_hang WHERE so_dien_thoai = @sdt AND mat_khau = @mk AND trang_thai = 1";
+                    SqlCommand cmd = new SqlCommand(sql, conn);
+                    cmd.Parameters.AddWithValue("@sdt", phone);
+                    cmd.Parameters.AddWithValue("@mk", hashInput);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Lưu thông tin vào Session
+                            Session["KhachHangId"] = reader["id"];
+                            Session["HoVaTen"] = reader["ho_va_ten"];
+                            Response.Redirect("Default.aspx");
+                        }
+                        else
+                        {
+                            lblMessage.ForeColor = System.Drawing.Color.Red;
+                            lblMessage.Text = "Số điện thoại hoặc mật khẩu không đúng.";
+                        }
+                    }
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Hiển thị lỗi nếu sai thông tin
-                lblMessage.Text = "Số điện thoại hoặc mật khẩu không đúng.";
+                lblMessage.Text = "Lỗi: " + ex.Message;
+            }
+        }
+
+        private static string HashPassword(string password)
+        {
+            using (SHA256 sha = SHA256.Create())
+            {
+                var bytes = Encoding.UTF8.GetBytes(password + "LilySpa_Salt_2025");
+                byte[] hash = sha.ComputeHash(bytes);
+                StringBuilder sb = new StringBuilder();
+                foreach (byte b in hash) sb.Append(b.ToString("x2"));
+                return sb.ToString();
             }
         }
     }

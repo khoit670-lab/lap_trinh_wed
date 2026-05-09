@@ -34,6 +34,11 @@
                     </div>
 
                     <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <asp:TextBox ID="txtEmail" runat="server" CssClass="w-full px-5 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:border-pink-500" placeholder="Nhập email" TextMode="Email"></asp:TextBox>
+                    </div>
+
+                    <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Mật khẩu</label>
                         <asp:TextBox ID="txtPassword" runat="server" CssClass="w-full px-5 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:border-pink-500" placeholder="Nhập mật khẩu" TextMode="Password"></asp:TextBox>
                     </div>
