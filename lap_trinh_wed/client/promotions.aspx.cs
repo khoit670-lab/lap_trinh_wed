@@ -103,9 +103,9 @@ namespace lap_trinh_wed.client
         {
             if (e.CommandName == "NhanUuDai")
             {
+                // PHẦN THAY ĐỔI: Chuyển sang trang booking kèm mã thay vì copy clipboard
                 string ma = e.CommandArgument.ToString();
-                string js = $"navigator.clipboard.writeText('{ma}').then(function(){{ alert('Đã sao chép mã: {ma}'); }});";
-                Page.ClientScript.RegisterStartupScript(GetType(), "copy", js, true);
+                Response.Redirect("booking.aspx?code=" + ma);
             }
         }
 
