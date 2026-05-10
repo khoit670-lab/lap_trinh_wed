@@ -22,7 +22,7 @@
                     <a href="Default.aspx" class="nav-link">Trang chủ</a>
                     <a href="services.aspx" class="nav-link">Dịch vụ làm đẹp</a>
                     <a href="booking.aspx" class="nav-link">Đặt lịch</a>
-                    <a href="services.aspx" class="nav-link">Mã khuyến mãi</a>
+                    <a href="promotions.aspx" class="nav-link">Mã khuyến mãi</a>
                     <a href="login.aspx" class="nav-link">Tài khoản</a>
                 </nav>
 
@@ -184,7 +184,7 @@
                     <div class="footer-col">
                         <h3 class="footer-title">Thông tin liên hệ</h3>
                         <div class="footer-lines">
-                            <p><i class="fa-solid fa-location-dot"></i> 96 - Phương Bình Công Thành Phố Ba Đình, Hà Nội</p>
+                            <p><i class="fa-solid fa-location-dot"></i> 96 - Định Công - Hoàng Mai - Hà Nội</p>
                             <p><i class="fa-solid fa-phone"></i> 18001508 (CSKH)</p>
                             <p><i class="fa-solid fa-phone"></i> 099999999 (Tư vấn viên)</p>
                             <p><i class="fa-regular fa-clock"></i> Thời gian làm việc: từ 8h30 đến 22h00</p>

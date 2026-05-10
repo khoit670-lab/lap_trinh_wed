@@ -32,7 +32,7 @@
                     <a href="Default.aspx" class="nav-link">Trang chủ</a>
                     <a href="services.aspx" class="nav-link">Dịch vụ làm đẹp</a>
                     <a href="booking.aspx" class="nav-link">Đặt lịch</a>
-                    <a href="#" class="nav-link">Mã khuyến mãi</a>
+                    <a href="promotions.aspx" class="nav-link">Mã khuyến mãi</a>
                     <a href="login.aspx" class="nav-link">Tài khoản</a>
                 </nav>
                 <div class="header-right">
@@ -72,12 +72,12 @@
                         </div>
 
                         <asp:Button ID="btnTatCa" runat="server" Text="Tất cả" OnClick="btnTatCa_Click" 
-                            CssClass="px-6 py-3 bg-pink-600 text-white border border-pink-600 rounded-2xl text-sm font-medium cursor-pointer" />
+                            CssClass="px-6 py-3 bg-pink-600 text-white border border-pink-600 rounded-2xl text-sm font-medium cursor-pointer transition" />
 
                         <asp:Repeater ID="rptDanhMuc" runat="server">
                             <ItemTemplate>
                                 <asp:LinkButton ID="btnLoc" runat="server" 
-                                    CssClass="px-6 py-3 bg-white border border-gray-300 rounded-2xl text-sm font-medium hover:bg-pink-50 text-gray-700"
+                                    CssClass='<%# Convert.ToInt32(Eval("id")) == selectedDanhMucId ? "px-6 py-3 bg-pink-600 text-white border border-pink-600 rounded-2xl text-sm font-medium transition" : "px-6 py-3 bg-white border border-gray-300 rounded-2xl text-sm font-medium hover:bg-pink-50 text-gray-700 transition" %>'
                                     CommandArgument='<%# Eval("id") %>' OnClick="btnLoc_Click">
                                     <%# Eval("ten_danh_muc") %>
                                 </asp:LinkButton>
@@ -91,24 +91,32 @@
 
                         <asp:Repeater ID="rptDichVu" runat="server">
                             <ItemTemplate>
-                                <a href='<%# DetailUrl(Eval("id")) %>' class="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-xl transition transform hover:-translate-y-2 duration-300 block">
-                                    <div class="relative h-56 overflow-hidden bg-gray-200">
-                                        <img src='<%# ResolveUrl("~/assets/anh/" + Eval("hinh_anh")) %>' 
-                                            class="w-full h-full object-cover" alt='<%# Eval("ten_dich_vu") %>' />
-                                    </div>
-                                    <div class="p-6 text-center">
-                                        <h3 class="text-lg font-bold text-pink-600 mb-2"><%# Eval("ten_dich_vu") %></h3>
+                                <article class="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-xl transition transform hover:-translate-y-2 duration-300 flex flex-col h-full">
+                                    
+                                    <a href='<%# DetailUrl(Eval("id")) %>' class="relative h-56 overflow-hidden bg-gray-200 block">
+                                        <img src='<%# AnhUrl(Eval("hinh_anh")) %>' 
+                                            class="w-full h-full object-cover hover:scale-105 transition-transform duration-300" alt='<%# Eval("ten_dich_vu") %>' />
+                                    </a>
+                                    
+                                    <div class="p-6 text-center flex flex-col flex-grow">
+                                        <a href='<%# DetailUrl(Eval("id")) %>' class="block mb-2">
+                                            <h3 class="text-lg font-bold text-pink-600 hover:text-pink-800 transition"><%# Eval("ten_dich_vu") %></h3>
+                                        </a>
+                                        
                                         <p class="text-sm text-gray-600 mb-4 line-clamp-2">
                                             <%# Eval("mo_ta") %>
                                         </p>
-                                        <div class="text-sm text-gray-500 mb-4">
+                                        
+                                        <div class="text-sm text-gray-500 mb-6 mt-auto">
                                             <%# FormatGia(Eval("gia_goc"), Eval("gia_khuyen_mai")) %> • <%# Eval("thoi_gian") %> phút
                                         </div>
-                                        <div class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-2xl text-sm transition">
+                                        
+                                        <a href='<%# BookingUrl(Eval("id")) %>' class="block w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3 rounded-2xl text-sm transition cursor-pointer">
                                             ĐẶT LỊCH NGAY
-                                        </div>
+                                        </a>
                                     </div>
-                                </a>
+                                    
+                                </article>
                             </ItemTemplate>
                         </asp:Repeater>
                     </div>
@@ -123,7 +131,7 @@
                     <div class="footer-col">
                         <h3 class="footer-title">Thông tin liên hệ</h3>
                         <div class="footer-lines">
-                            <p><i class="fa-solid fa-location-dot"></i> 96 - Phương Bình Công Thành Phố Ba Đình, Hà Nội</p>
+                            <p><i class="fa-solid fa-location-dot"></i> 96 - Định Công - Hoàng Mai - Hà Nội</p>
                             <p><i class="fa-solid fa-phone"></i> 18001508 (CSKH)</p>
                             <p><i class="fa-solid fa-phone"></i> 099999999 (Tư vấn viên)</p>
                             <p><i class="fa-regular fa-clock"></i> 8h30 - 22h00</p>

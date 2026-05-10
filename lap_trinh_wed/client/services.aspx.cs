@@ -10,8 +10,10 @@ namespace lap_trinh_wed.client
     public partial class services : Page
     {
         private readonly string _conn = ConfigurationManager.ConnectionStrings["LilySpaDB"].ConnectionString;
-        protected string userGreeting = "";
-        protected int selectedDanhMucId = 0;
+        public string userGreeting = "";
+
+        // Đã đổi thành public để ngoài file .aspx có thể gọi đến dễ dàng để tô màu
+        public int selectedDanhMucId = 0;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -102,9 +104,22 @@ namespace lap_trinh_wed.client
             int.TryParse(btn.CommandArgument, out selectedDanhMucId);
             ViewState["SelectedDanhMucId"] = selectedDanhMucId;
 
-            // Lọc theo danh mục nhưng vẫn giữ lại từ khóa tìm kiếm hiện tại (nếu có)
-            string tuKhoa = txtSearch != null ? txtSearch.Text.Trim() : "";
-            LoadDichVu(selectedDanhMucId, tuKhoa);
+            // Xóa từ khóa tìm kiếm khi chọn bộ lọc mới
+            if (txtSearch != null)
+            {
+                txtSearch.Text = string.Empty;
+            }
+
+            // Chuyển nút Tất Cả sang màu trắng (trạng thái không chọn)
+            if (btnTatCa != null)
+            {
+                btnTatCa.CssClass = "px-6 py-3 bg-white border border-gray-300 rounded-2xl text-sm font-medium hover:bg-pink-50 text-gray-700 transition cursor-pointer";
+            }
+
+            LoadDichVu(selectedDanhMucId, "");
+
+            // QUAN TRỌNG: Tải lại danh mục để áp dụng CSS màu hồng cho nút đang được chọn
+            LoadDanhMuc();
         }
 
         protected void btnTatCa_Click(object sender, EventArgs e)
@@ -112,21 +127,41 @@ namespace lap_trinh_wed.client
             selectedDanhMucId = 0;
             ViewState["SelectedDanhMucId"] = 0;
 
+            // Xóa trắng ô tìm kiếm khi bấm Tất cả
             if (txtSearch != null)
-                txtSearch.Text = string.Empty; // Xóa trắng ô tìm kiếm khi bấm Tất cả
+            {
+                txtSearch.Text = string.Empty;
+            }
+
+            // Đổi lại nút Tất Cả thành màu hồng
+            if (btnTatCa != null)
+            {
+                btnTatCa.CssClass = "px-6 py-3 bg-pink-600 text-white border border-pink-600 rounded-2xl text-sm font-medium transition cursor-pointer";
+            }
 
             LoadDichVu(0, "");
+
+            // Tải lại danh mục để xóa màu hồng của các nút bộ lọc khác
+            LoadDanhMuc();
         }
 
-        // CHỈ GIỮ LẠI 1 HÀM btnSearch_Click
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            // Khi tìm kiếm, thường khách hàng muốn tìm trên toàn bộ danh mục
+            // Khi tìm kiếm, reset danh mục để tìm trên toàn hệ thống
             selectedDanhMucId = 0;
             ViewState["SelectedDanhMucId"] = 0;
 
+            // Chuyển nút Tất Cả sang màu trắng vì đang trong chế độ tìm kiếm
+            if (btnTatCa != null)
+            {
+                btnTatCa.CssClass = "px-6 py-3 bg-white border border-gray-300 rounded-2xl text-sm font-medium hover:bg-pink-50 text-gray-700 transition cursor-pointer";
+            }
+
             string tuKhoa = txtSearch != null ? txtSearch.Text.Trim() : "";
             LoadDichVu(0, tuKhoa);
+
+            // Tải lại danh mục để các nút trở về màu trắng
+            LoadDanhMuc();
         }
 
         protected string FormatGia(object giaGoc, object giaKM)
@@ -139,7 +174,29 @@ namespace lap_trinh_wed.client
             catch { return "Liên hệ"; }
         }
 
-        // Trỏ trực tiếp sang trang đặt lịch
-        protected string DetailUrl(object id) => "booking.aspx";
+        // ================= CÁC HÀM XỬ LÝ LINK Ở ĐÂY =================
+
+        // 1. Hàm tạo link vào trang Chi tiết
+        protected string DetailUrl(object id)
+        {
+            if (id != null) return "service-detail.aspx?id=" + id.ToString();
+            return "#";
+        }
+
+        // 2. Hàm tạo link vào trang Đặt lịch
+        protected string BookingUrl(object id)
+        {
+            if (id != null) return "booking.aspx?dichVuId=" + id.ToString();
+            return "#";
+        }
+
+        // 3. Hàm xử lý đường dẫn ảnh (để tránh lỗi nếu DB không có ảnh)
+        protected string AnhUrl(object hinh)
+        {
+            string ten = hinh?.ToString();
+            return string.IsNullOrEmpty(ten)
+                ? ResolveUrl("~/assets/anh/default.jpg")
+                : ResolveUrl("~/assets/anh/" + ten);
+        }
     }
 }
