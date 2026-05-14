@@ -5,7 +5,7 @@
 <head runat="server">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lily Spa</title>
+    <title>Đăng nhập - Lily Spa</title>
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
@@ -21,7 +21,7 @@
             </div>
 
             <div class="p-8">
-                <div class="space-y-6">
+                <div class="space-y-5">
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Họ và tên</label>
                         <asp:TextBox ID="txtName" runat="server" CssClass="w-full px-5 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:border-pink-500" placeholder="Nhập họ và tên"></asp:TextBox>
@@ -37,35 +37,24 @@
                         <asp:TextBox ID="txtPassword" runat="server" CssClass="w-full px-5 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:border-pink-500" placeholder="Nhập mật khẩu" TextMode="Password"></asp:TextBox>
                     </div>
 
+                    <div class="flex items-center">
+                        <asp:CheckBox ID="chkRemember" runat="server" Text="&nbsp;Ghi nhớ đăng nhập" CssClass="text-sm text-gray-600" />
+                    </div>
+
                     <asp:Label ID="lblMessage" runat="server" Text="" ForeColor="Red" Font-Size="Small" Display="Dynamic"></asp:Label>
 
                     <asp:Button ID="btnLogin" runat="server" Text="ĐĂNG NHẬP" OnClick="btnLogin_Click" 
                         CssClass="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-4 rounded-2xl text-lg transition cursor-pointer" />
                 </div>
 
-                <div class="mt-6">
-                    <p class="text-center text-sm text-gray-500 mb-4">Hoặc đăng nhập với</p>
-                    <div class="grid grid-cols-2 gap-4">
-                        <button type="button" class="flex items-center justify-center gap-2 border border-gray-300 py-3 rounded-2xl hover:bg-gray-50">
-                            <i class="fab fa-facebook-f text-blue-600 text-xl"></i>
-                            <span class="font-medium">Facebook</span>
-                        </button>
-                        <button type="button" class="flex items-center justify-center gap-2 border border-gray-300 py-3 rounded-2xl hover:bg-gray-50">
-                            <i class="fab fa-google text-red-500 text-xl"></i>
-                            <span class="font-medium">Google</span>
-                        </button>
-                    </div>
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        Chưa có tài khoản? 
+                        <a href="register.aspx" class="text-pink-600 font-semibold hover:underline">Đăng ký</a>
+                    </p>
                 </div>
-            </div>
-
-            <div class="text-center pb-8">
-                <p class="text-sm text-gray-600">
-                    Chưa có tài khoản? 
-                    <a href="register.aspx" class="text-pink-600 font-semibold hover:underline">Đăng ký</a>
-                </p>
             </div>
         </div>
     </form>
-
 </body>
 </html>

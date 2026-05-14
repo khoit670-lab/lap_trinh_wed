@@ -82,7 +82,18 @@
   <ItemGroup>
     <Content Include="Admin\admin_appointment.aspx" />
     <Content Include="Admin\admin_appointment_detail.aspx" />
+    <Content Include="Admin\admin_customer.aspx" />
+    <Content Include="Admin\admin_customer_detail.aspx" />
+    <Content Include="Admin\admin_customer_edit.aspx" />
     <Content Include="Admin\admin_dashboard.aspx" />
+    <Content Include="Admin\admin_service.aspx" />
+    <Content Include="Admin\admin_service_add.aspx" />
+    <Content Include="Admin\admin_service_detail.aspx" />
+    <Content Include="Admin\admin_service_edit.aspx" />
+    <Content Include="Admin\admin_staff.aspx" />
+    <Content Include="Admin\admin_staff_add.aspx" />
+    <Content Include="Admin\admin_staff_detail.aspx" />
+    <Content Include="Admin\admin_staff_edit.aspx" />
     <Content Include="assets\anh\Body_Detox_Tan_Mo.jpg" />
     <Content Include="assets\anh\Cham_soc_da.jpg" />
     <Content Include="assets\anh\cham_soc_da_mat_Collagen_Glow.jpg" />
@@ -100,6 +111,7 @@
     <Content Include="client\booking.aspx" />
     <Content Include="client\Default.aspx" />
     <Content Include="client\login.aspx" />
+    <Content Include="client\payment.aspx" />
     <Content Include="client\profile.aspx" />
     <Content Include="client\promotions.aspx" />
     <Content Include="client\register.aspx" />
@@ -124,6 +136,27 @@
     <Compile Include="Admin\admin_appointment_detail.aspx.designer.cs">
       <DependentUpon>admin_appointment_detail.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\admin_customer.aspx.cs">
+      <DependentUpon>admin_customer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_customer.aspx.designer.cs">
+      <DependentUpon>admin_customer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\admin_customer_detail.aspx.cs">
+      <DependentUpon>admin_customer_detail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_customer_detail.aspx.designer.cs">
+      <DependentUpon>admin_customer_detail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\admin_customer_edit.aspx.cs">
+      <DependentUpon>admin_customer_edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_customer_edit.aspx.designer.cs">
+      <DependentUpon>admin_customer_edit.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Admin\admin_dashboard.aspx.cs">
       <DependentUpon>admin_dashboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -131,10 +164,65 @@
     <Compile Include="Admin\admin_dashboard.aspx.designer.cs">
       <DependentUpon>admin_dashboard.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Admin\admin_service.aspx.cs">
+      <DependentUpon>admin_service.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_service.aspx.designer.cs">
+      <DependentUpon>admin_service.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\admin_service_add.aspx.cs">
+      <DependentUpon>admin_service_add.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_service_add.aspx.designer.cs">
+      <DependentUpon>admin_service_add.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\admin_service_detail.aspx.cs">
+      <DependentUpon>admin_service_detail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_service_detail.aspx.designer.cs">
+      <DependentUpon>admin_service_detail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\admin_service_edit.aspx.cs">
+      <DependentUpon>admin_service_edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_service_edit.aspx.designer.cs">
+      <DependentUpon>admin_service_edit.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\admin_staff.aspx.cs">
+      <DependentUpon>admin_staff.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_staff.aspx.designer.cs">
+      <DependentUpon>admin_staff.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\admin_staff_add.aspx.cs">
+      <DependentUpon>admin_staff_add.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_staff_add.aspx.designer.cs">
+      <DependentUpon>admin_staff_add.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\admin_staff_detail.aspx.cs">
+      <DependentUpon>admin_staff_detail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_staff_detail.aspx.designer.cs">
+      <DependentUpon>admin_staff_detail.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\admin_staff_edit.aspx.cs">
+      <DependentUpon>admin_staff_edit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\admin_staff_edit.aspx.designer.cs">
+      <DependentUpon>admin_staff_edit.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="client\booking.aspx.cs">
       <DependentUpon>booking.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="client\booking.aspx.designer.cs">
       <DependentUpon>booking.aspx</DependentUpon>
@@ -152,6 +240,13 @@
     </Compile>
     <Compile Include="client\login.aspx.designer.cs">
       <DependentUpon>login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="client\payment.aspx.cs">
+      <DependentUpon>payment.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="client\payment.aspx.designer.cs">
+      <DependentUpon>payment.aspx</DependentUpon>
     </Compile>
     <Compile Include="client\profile.aspx.cs">
       <DependentUpon>profile.aspx</DependentUpon>

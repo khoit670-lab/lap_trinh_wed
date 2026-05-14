@@ -26,7 +26,7 @@
           <a href="services.aspx" class="nav-link">Dịch vụ làm đẹp</a>
           <a href="booking.aspx" class="nav-link">Đặt lịch</a>
           <a href="promotions.aspx" class="nav-link">Mã khuyến mãi</a>
-          <a href="login.aspx" class="nav-link">Tài khoản</a>
+          <a href="profile.aspx" class="nav-link">Tài khoản</a>
         </nav>
 
         <div class="header-right">
