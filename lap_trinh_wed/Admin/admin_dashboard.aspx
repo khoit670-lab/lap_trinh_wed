@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="admin_dashboard.aspx.cs" Inherits="lap_trinh_wed.admin.dashboard" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="admin_dashboard.aspx.cs" Inherits="lap_trinh_wed.admin.admin_dashboard" %>
 <!DOCTYPE html>
 <html>
 <head runat="server">

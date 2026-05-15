@@ -9,6 +9,30 @@
     <link rel="stylesheet" href="../css/style.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .admin-choice { 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important; 
+            color: white !important; 
+            border-radius: 15px !important; 
+            padding: 25px !important; 
+            text-align: center !important; 
+            margin-top: 20px !important;
+        }
+        .admin-btn { 
+            padding: 12px 24px !important; 
+            border: none !important; 
+            border-radius: 10px !important; 
+            font-weight: bold !important; 
+            font-size: 14px !important; 
+            cursor: pointer !important; 
+            margin: 5px !important; 
+            min-width: 140px;
+            transition: all 0.3s !important;
+        }
+        .admin-btn:hover { transform: scale(1.05) !important; }
+        .btn-admin { background: #10b981 !important; color: white !important; }
+        .btn-client { background: #f59e0b !important; color: white !important; }
+    </style>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
 
@@ -29,6 +53,7 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Số Điện Thoại</label>
+                        <!-- ✅ FIX LỖI: TextMode="Phone" (giữ nguyên như cũ) -->
                         <asp:TextBox ID="txtPhone" runat="server" CssClass="w-full px-5 py-3 border border-gray-300 rounded-2xl focus:outline-none focus:border-pink-500" placeholder="Nhập số điện thoại" TextMode="Phone"></asp:TextBox>
                     </div>
 
@@ -45,6 +70,12 @@
 
                     <asp:Button ID="btnLogin" runat="server" Text="ĐĂNG NHẬP" OnClick="btnLogin_Click" 
                         CssClass="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-4 rounded-2xl text-lg transition cursor-pointer" />
+
+                    <!-- ✅ CHỈ THÊM 2 NÚT NÀY -->
+                    <asp:Button ID="btnAdminMode" runat="server" Text="👑 Chế độ ADMIN" OnClick="btnAdminMode_Click" 
+                        CssClass="w-full admin-btn btn-admin mt-3" Visible="false" />
+                    <asp:Button ID="btnClientMode" runat="server" Text="👤 Chế độ KHÁCH" OnClick="btnClientMode_Click" 
+                        CssClass="w-full admin-btn btn-client mt-2" Visible="false" />
                 </div>
 
                 <div class="mt-6 text-center">

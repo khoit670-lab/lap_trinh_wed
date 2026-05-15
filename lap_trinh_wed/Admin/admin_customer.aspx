@@ -104,7 +104,8 @@
                 <h1>👥 Quản lý khách hàng</h1>
 
                 <div class="search-container">
-                    <asp:TextBox ID="txtSearch" runat="server" CssClass="search-input" placeholder="Tìm kiếm theo tên khách hàng hoặc số điện thoại..."></asp:TextBox>
+                    <asp:TextBox ID="txtSearch" runat="server" CssClass="search-input" 
+                                 placeholder="Tìm kiếm theo tên khách hàng hoặc số điện thoại..."></asp:TextBox>
                     <asp:Button ID="btnSearch" runat="server" Text="Tìm kiếm" CssClass="btn-search" OnClick="btnSearch_Click" />
                 </div>
 

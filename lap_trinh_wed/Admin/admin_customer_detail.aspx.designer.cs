@@ -24,13 +24,13 @@ namespace lap_trinh_wed.admin
         protected global::System.Web.UI.HtmlControls.HtmlForm form1;
 
         /// <summary>
-        /// imgAvatar control.
+        /// pnlDetail control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image imgAvatar;
+        protected global::System.Web.UI.WebControls.Panel pnlDetail;
 
         /// <summary>
         /// ltrFullName control.
@@ -51,6 +51,15 @@ namespace lap_trinh_wed.admin
         protected global::System.Web.UI.WebControls.Literal ltrPhone;
 
         /// <summary>
+        /// lblHangKhachHang control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblHangKhachHang;
+
+        /// <summary>
         /// ltrRank control.
         /// </summary>
         /// <remarks>
@@ -69,13 +78,22 @@ namespace lap_trinh_wed.admin
         protected global::System.Web.UI.WebControls.Literal ltrPoints;
 
         /// <summary>
-        /// ltrHealthInfo control.
+        /// lblTrangThaiKH control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal ltrHealthInfo;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTrangThaiKH;
+
+        /// <summary>
+        /// ltrStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltrStatus;
 
         /// <summary>
         /// ltrInternalNote control.
@@ -87,6 +105,15 @@ namespace lap_trinh_wed.admin
         protected global::System.Web.UI.WebControls.Literal ltrInternalNote;
 
         /// <summary>
+        /// pnlHistory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlHistory;
+
+        /// <summary>
         /// rptHistory control.
         /// </summary>
         /// <remarks>
@@ -94,5 +121,23 @@ namespace lap_trinh_wed.admin
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptHistory;
+
+        /// <summary>
+        /// pnlNoHistory control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlNoHistory;
+
+        /// <summary>
+        /// pnlNoData control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlNoData;
     }
 }

@@ -8,43 +8,77 @@ namespace lap_trinh_wed.admin
 {
     public partial class admin_customer : Page
     {
-        private readonly string _conn = ConfigurationManager.ConnectionStrings["LilySpaDB"]?.ConnectionString;
+        private readonly string _conn =
+            ConfigurationManager.ConnectionStrings["LilySpaDB"].ConnectionString;
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // ── Kiểm tra quyền ────────────────────────────────────
+            if (Session["VaiTro"] == null || !(bool)(Session["IsAdmin"] ?? false))
+            {
+                Response.Redirect("../client/Default.aspx?noaccess=1");
+                return;
+            }
             if (Session["VaiTro"] == null)
             {
                 Response.Redirect("../client/login.aspx");
                 return;
             }
+            string role = Session["VaiTro"].ToString().ToLower();
+            if (role != "admin" && role != "quan_ly" && role != "le_tan" && role != "nhan_vien")
+            {
+                Session.Abandon();
+                Response.Redirect("../client/login.aspx");
+                return;
+            }
+
+            // ── Hiển thị tên đăng nhập ────────────────────────────
+            lblUserRole.InnerText = Session["HoVaTen"]?.ToString() ?? "Quản trị viên";
 
             if (!IsPostBack)
-            {
                 LoadCustomers();
-            }
         }
 
-        private void LoadCustomers(string searchTerm = "")
+        // ── Load danh sách khách hàng ─────────────────────────────
+        private void LoadCustomers(string search = "")
         {
             try
             {
                 using (var conn = new SqlConnection(_conn))
                 {
-                    // Query lấy thông tin khách hàng kèm thống kê chi tiêu và số lần hủy
                     string sql = @"
-                        SELECT 
-                            kh.id, 
-                            kh.ho_va_ten, 
+                        SELECT
+                            kh.id,
+                            kh.ho_va_ten,
                             kh.so_dien_thoai,
-                            ISNULL((SELECT SUM(tong_tien) FROM lich_hen WHERE khach_hang_id = kh.id AND trang_thai = N'Hoàn thành'), 0) as tong_chi_tieu,
-                            (SELECT COUNT(*) FROM lich_hen WHERE khach_hang_id = kh.id AND trang_thai = N'Hủy') as so_lan_huy
+                            kh.hang_khach_hang,
+                            kh.diem_tich_luy,
+                            ISNULL((
+                                SELECT SUM(tong_tien)
+                                FROM   lich_hen
+                                WHERE  khach_hang_id = kh.id
+                                  AND  trang_thai    = N'Hoàn thành'
+                            ), 0) AS tong_chi_tieu,
+                            (
+                                SELECT COUNT(*)
+                                FROM   lich_hen
+                                WHERE  khach_hang_id = kh.id
+                                  AND  trang_thai    = N'Hủy'
+                            )     AS so_lan_huy
                         FROM khach_hang kh
-                        WHERE (@search = '' OR kh.ho_va_ten LIKE @search OR kh.so_dien_thoai LIKE @search)
+                        WHERE kh.trang_thai = 1
+                          AND (@search = ''
+                               OR kh.ho_va_ten    LIKE @search
+                               OR kh.so_dien_thoai LIKE @search
+                               OR kh.ma_khach_hang LIKE @search)
                         ORDER BY tong_chi_tieu DESC";
 
                     using (var cmd = new SqlCommand(sql, conn))
                     {
-                        cmd.Parameters.AddWithValue("@search", "%" + searchTerm + "%");
+                        cmd.Parameters.Add("@search", SqlDbType.NVarChar).Value =
+                            string.IsNullOrEmpty(search) ? "" : "%" + search + "%";
+
+                        conn.Open();
                         var da = new SqlDataAdapter(cmd);
                         var dt = new DataTable();
                         da.Fill(dt);
@@ -57,31 +91,34 @@ namespace lap_trinh_wed.admin
             }
             catch (Exception ex)
             {
-                Response.Write("<script>alert('Lỗi: " + ex.Message + "');</script>");
+                System.Diagnostics.Debug.WriteLine("LoadCustomers Error: " + ex.Message);
+                pnlNoData.Visible = true;
             }
         }
 
+        // ── Sự kiện: nút Tìm kiếm ────────────────────────────────
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             LoadCustomers(txtSearch.Text.Trim());
         }
 
-        // Helper phân hạng khách hàng dựa trên chi tiêu
-        protected string GetRankName(object spend)
+        // ── Helpers: hạng từ bảng DB ──────────────────────────────
+        // Dùng cột hang_khach_hang thay vì tính lại từ chi tiêu
+        protected string GetRankName(object hang)
+            => hang?.ToString() ?? "Đồng";
+
+        protected string GetRankClass(object hang)
         {
-            decimal s = Convert.ToDecimal(spend);
-            if (s >= 50000000) return "Kim cương";
-            if (s >= 10000000) return "Vàng";
-            if (s >= 5000000) return "Bạc";
-            return "Đồng";
+            switch (hang?.ToString())
+            {
+                case "Kim Cương": return "rank-badge rank-diamond";
+                case "Vàng": return "rank-badge rank-gold";
+                case "Bạc": return "rank-badge rank-silver";
+                default: return "rank-badge rank-bronze";
+            }
         }
 
-        protected string GetRankClass(object spend)
-        {
-            decimal s = Convert.ToDecimal(spend);
-            if (s >= 10000000) return "rank-badge rank-gold";
-            if (s >= 5000000) return "rank-badge rank-silver";
-            return "rank-badge rank-bronze";
-        }
+        protected string FormatTien(object tien)
+            => string.Format("{0:N0}đ", Convert.ToDecimal(tien));
     }
 }

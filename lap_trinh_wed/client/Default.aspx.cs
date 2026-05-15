@@ -14,6 +14,11 @@ namespace lap_trinh_wed.client
         protected void Page_Load(object sender, EventArgs e)
         {
             // Kiểm tra đăng nhập để hiện lời chào
+            if (Session["VaiTro"] == null)
+            {
+                Response.Redirect("login.aspx");
+                return;
+            }
             if (Session["HoVaTen"] != null)
                 userGreeting = "Xin chào, " + Session["HoVaTen"].ToString();
             else

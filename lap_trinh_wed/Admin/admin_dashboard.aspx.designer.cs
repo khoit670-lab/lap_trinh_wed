@@ -11,7 +11,7 @@ namespace lap_trinh_wed.admin
 {
 
 
-    public partial class dashboard
+    public partial class admin_dashboard
     {
 
         /// <summary>

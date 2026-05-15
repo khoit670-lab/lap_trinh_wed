@@ -19,12 +19,12 @@ namespace lap_trinh_wed.admin
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Cache.SetExpires(DateTime.UtcNow.AddHours(-1));
             Response.Cache.SetNoServerCaching();
-
-            if (Session["VaiTro"] == null)
+            if (Session["VaiTro"] == null || !(bool)(Session["IsAdmin"] ?? false))
             {
-                Response.Redirect("../client/login.aspx");
+                Response.Redirect("../client/Default.aspx?noaccess=1");
                 return;
             }
+            
 
             string role = Session["VaiTro"].ToString().ToLower();
             lblUserGreeting.InnerText = Session["HoVaTen"]?.ToString() ?? "Quản trị viên";

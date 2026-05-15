@@ -2,77 +2,141 @@
 using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
+using System.Web.UI;
 
 namespace lap_trinh_wed.admin
 {
-    public partial class admin_customer_detail : System.Web.UI.Page
+    public partial class admin_customer_detail : Page
     {
-        private readonly string _conn = ConfigurationManager.ConnectionStrings["LilySpaDB"].ConnectionString;
+        private readonly string _conn =
+            ConfigurationManager.ConnectionStrings["LilySpaDB"].ConnectionString;
+
+        protected int khachHangId = 0;
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["VaiTro"] == null || !(bool)(Session["IsAdmin"] ?? false))
+            {
+                Response.Redirect("../client/Default.aspx?noaccess=1");
+                return;
+            }
+            if (Session["VaiTro"] == null)
+            {
+                Response.Redirect("../client/login.aspx");
+                return;
+            }
+
+            if (!int.TryParse(Request.QueryString["id"], out khachHangId) || khachHangId <= 0)
+            {
+                Response.Redirect("admin_customer.aspx");
+                return;
+            }
+
             if (!IsPostBack)
             {
-                // Lấy ID khách hàng từ URL (ví dụ: admin_customer_detail.aspx?id=10)
-                if (Request.QueryString["id"] != null)
+                LoadThongTin(khachHangId);
+                LoadLichSu(khachHangId);
+            }
+
+            // 🔥 FIX NÚT CHỈNH SỬA
+            Page.DataBind();
+        }
+
+        private void LoadThongTin(int id)
+        {
+            try
+            {
+                using (var conn = new SqlConnection(_conn))
                 {
-                    int khId = Convert.ToInt32(Request.QueryString["id"]);
-                    LoadCustomerDetail(khId);
-                    LoadServiceHistory(khId);
+                    var cmd = new SqlCommand(@"
+                        SELECT
+                            ho_va_ten, so_dien_thoai,
+                            hang_khach_hang, diem_tich_luy,
+                            ghi_chu, trang_thai
+                        FROM khach_hang
+                        WHERE id = @id", conn);
+
+                    cmd.Parameters.AddWithValue("@id", id);
+                    conn.Open();
+
+                    using (var r = cmd.ExecuteReader())
+                    {
+                        if (!r.Read())
+                        {
+                            pnlDetail.Visible = false;
+                            pnlNoData.Visible = true;
+                            return;
+                        }
+
+                        ltrFullName.Text = r["ho_va_ten"].ToString();
+                        ltrPhone.Text = r["so_dien_thoai"].ToString();
+                        ltrRank.Text = r["hang_khach_hang"].ToString();
+                        ltrPoints.Text = string.Format("{0:N0} điểm", Convert.ToInt32(r["diem_tich_luy"]));
+                        ltrStatus.Text = r["trang_thai"].ToString() == "1" ? "Hoạt động" : "Không hoạt động";
+
+                        lblTrangThaiKH.Attributes["class"] = r["trang_thai"].ToString() == "1"
+                            ? "status-badge status-active"
+                            : "status-badge status-inactive";
+
+                        string ghiChu = r["ghi_chu"].ToString();
+                        ltrInternalNote.Text = string.IsNullOrEmpty(ghiChu) ? "Không có ghi chú" : ghiChu;
+
+                        pnlDetail.Visible = true;
+                        pnlNoData.Visible = false;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("LoadThongTin Error: " + ex.Message);
+                pnlDetail.Visible = false;
+                pnlNoData.Visible = true;
             }
         }
 
-        private void LoadCustomerDetail(int id)
+        private void LoadLichSu(int id)
         {
-            using (SqlConnection conn = new SqlConnection(_conn))
+            try
             {
-                string sql = "SELECT * FROM khach_hang WHERE id = @id";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@id", id);
-                conn.Open();
-                SqlDataReader rdr = cmd.ExecuteReader();
-                if (rdr.Read())
+                using (var conn = new SqlConnection(_conn))
                 {
-                    ltrFullName.Text = rdr["ho_va_ten"].ToString();
-                    ltrPhone.Text = rdr["so_dien_thoai"].ToString();
-                    ltrPoints.Text = rdr["diem_tich_luy"].ToString();
-                    ltrHealthInfo.Text = rdr["ghi_chu"] != DBNull.Value ? rdr["ghi_chu"].ToString() : "Chưa có thông tin";
+                    var cmd = new SqlCommand(@"
+                        SELECT TOP 10
+                            lh.ngay_hen,
+                            STRING_AGG(CAST(dv.ten_dich_vu AS NVARCHAR(MAX)), N', ') AS ten_dich_vu,
+                            SUM(lhct.thanh_tien) AS tong_tien
+                        FROM lich_hen lh
+                        LEFT JOIN lich_hen_chi_tiet lhct ON lhct.lich_hen_id = lh.id
+                        LEFT JOIN dich_vu dv ON lhct.dich_vu_id = dv.id
+                        WHERE lh.khach_hang_id = @id AND lh.trang_thai = N'Hoàn thành'
+                        GROUP BY lh.id, lh.ngay_hen
+                        ORDER BY lh.ngay_hen DESC", conn);
 
-                    // Logic phân hạng dựa trên điểm hoặc chi tiêu (Ví dụ)
-                    int points = Convert.ToInt32(rdr["diem_tich_luy"]);
-                    if (points > 1000) ltrRank.Text = "Vàng";
-                    else if (points > 500) ltrRank.Text = "Bạc";
-                    else ltrRank.Text = "Đồng";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    conn.Open();
 
-                    if (rdr["avatar"] != DBNull.Value)
-                        imgAvatar.ImageUrl = "../assets/anh/" + rdr["avatar"].ToString();
+                    var da = new SqlDataAdapter(cmd);
+                    var dt = new DataTable();
+                    da.Fill(dt);
+
+                    if (dt.Rows.Count > 0)
+                    {
+                        rptHistory.DataSource = dt;
+                        rptHistory.DataBind();
+                        pnlHistory.Visible = true;
+                        pnlNoHistory.Visible = false;
+                    }
+                    else
+                    {
+                        pnlHistory.Visible = false;
+                        pnlNoHistory.Visible = true;
+                    }
                 }
             }
-        }
-
-        private void LoadServiceHistory(int id)
-        {
-            using (SqlConnection conn = new SqlConnection(_conn))
+            catch (Exception ex)
             {
-                // Query lấy lịch sử dịch vụ đã hoàn thành
-                string sql = @"
-                    SELECT lh.ngay_hen, lh.tong_tien, 
-                    (SELECT TOP 1 dv.ten_dich_vu 
-                     FROM lich_hen_chi_tiet ct 
-                     JOIN dich_vu dv ON ct.dich_vu_id = dv.id 
-                     WHERE ct.lich_hen_id = lh.id) as ten_dich_vu
-                    FROM lich_hen lh 
-                    WHERE lh.khach_hang_id = @id AND lh.trang_thai = N'Hoàn thành'
-                    ORDER BY lh.ngay_hen DESC";
-
-                SqlDataAdapter da = new SqlDataAdapter(sql, conn);
-                da.SelectCommand.Parameters.AddWithValue("@id", id);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                rptHistory.DataSource = dt;
-                rptHistory.DataBind();
+                System.Diagnostics.Debug.WriteLine("LoadLichSu Error: " + ex.Message);
+                pnlNoHistory.Visible = true;
             }
         }
     }

@@ -8,6 +8,11 @@ namespace lap_trinh_wed.admin
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["VaiTro"] == null || !(bool)(Session["IsAdmin"] ?? false))
+            {
+                Response.Redirect("../client/Default.aspx?noaccess=1");
+                return;
+            }
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Cache.SetNoStore();
 

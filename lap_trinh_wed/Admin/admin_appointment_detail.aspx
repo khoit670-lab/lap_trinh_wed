@@ -1,176 +1,237 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="admin_appointment_detail.aspx.cs" Inherits="lap_trinh_wed.admin.appointment_detail" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="admin_appointment_detail.aspx.cs" Inherits="lap_trinh_wed.admin.admin_appointment_detail" %>
 
 <!DOCTYPE html>
 <html>
 <head runat="server">
     <meta charset="UTF-8">
-    <title>Chi tiết lịch hẹn - Lily Spa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết lịch hẹn</title>
     <style>
+        :root {
+            --primary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body { 
-            background-color: #fcfcfc; 
-            font-family: 'Segoe UI', sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            margin: 0; 
+            background: var(--gray-50);
+            font-family: system-ui, -apple-system, sans-serif;
+            color: var(--gray-900);
+            padding: 2rem;
+            line-height: 1.5;
         }
 
-        .detail-card {
-            background: #fff; 
-            width: 500px; 
-            padding: 40px; 
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            border: 1px solid #eee;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .detail-card h1 { 
-            font-size: 32px; 
-            text-align: center; 
-            margin-bottom: 30px; 
-            font-weight: bold; 
-            color: #f04581;
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
         }
 
-        .info-group { 
-            margin-bottom: 20px; 
-        }
-        .info-label { 
-            font-weight: bold; 
-            font-size: 18px; 
-            color: #333; 
-            display: block; 
-            margin-bottom: 5px; 
-        }
-        .info-content { 
-            font-size: 17px; 
-            color: #666; 
-            padding-left: 10px; 
-        }
-
-        /* Status badge */
-        .status-badge {
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            color: white;
-        }
-        .status-cho { background: #ff9800; }
-        .status-xac { background: #52c41a; }
-        .status-dang { background: #1890ff; }
-        .status-hoan { background: #52c41a; }
-        .status-huy { background: #ff4d4f; }
-
-        /* Nút bấm */
-        .action-group { 
-            display: flex; 
-            justify-content: space-between; 
-            margin-top: 40px; 
-            gap: 15px; 
-        }
-        .btn {
-            flex: 1; 
-            padding: 15px; 
-            border-radius: 12px; 
-            border: none;
-            font-weight: bold; 
-            font-size: 16px; 
-            cursor: pointer; 
-            transition: 0.3s; 
+        .title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
             text-align: center;
-        }
-        .btn-checkin { 
-            background-color: #52c41a; 
-            color: white; 
-        }
-        .btn-cancel { 
-            background-color: #ff4d4f; 
-            color: white; 
-        }
-        .btn-close { 
-            background-color: #d9d9d9; 
-            color: #333; 
-            text-decoration: none; 
-            display: inline-block; 
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.025em;
         }
 
-        .btn:hover:not(.btn-close) { 
-            opacity: 0.8; 
-            transform: translateY(-1px);
+        .info-row {
+            display: flex;
+            align-items: center;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--gray-200);
         }
-        .btn-close:hover { 
-            background-color: #bfbfbf; 
+
+        .info-row:last-child { border-bottom: none; }
+
+        .info-label {
+            font-weight: 500;
+            color: var(--gray-700);
+            min-width: 140px;
+            font-size: 0.95rem;
+        }
+
+        .info-value {
+            flex: 1;
+            font-weight: 500;
+            color: var(--gray-900);
+            font-size: 1rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-cho { background: #eff6ff; color: #1e40af; }
+        .status-xac { background: #ecfdf5; color: #166534; }
+        .status-dang { background: #fef3c7; color: #92400e; }
+        .status-hoan { background: #f0fdf4; color: #166534; }
+        .status-huy { background: #fef2f2; color: #dc2626; }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-200);
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-purple { background: var(--purple); color: white; }
+        .btn-secondary { 
+            background: var(--gray-100); 
+            color: var(--gray-700); 
+            border: 1px solid var(--gray-200);
         }
 
         .no-data {
             text-align: center;
-            padding: 60px 40px;
-            color: #999;
+            padding: 4rem 2rem;
         }
-        .no-data i {
-            font-size: 64px;
-            margin-bottom: 20px;
-            color: #ddd;
+
+        .no-data h2 { 
+            font-size: 1.5rem; 
+            color: var(--gray-900); 
+            margin-bottom: 0.5rem;
+        }
+
+        .no-data p { 
+            color: var(--gray-600); 
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 1rem; }
+            .card { padding: 2rem; }
+            .title { font-size: 1.875rem; }
+            .info-row { flex-direction: column; align-items: flex-start; gap: 0.25rem; padding: 1rem 0; }
+            .info-label { min-width: auto; }
+            .actions { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
         }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
-        <asp:Panel ID="pnlDetail" runat="server" CssClass="detail-card" Visible="false">
-            <h1>📋 Chi tiết lịch hẹn</h1>
+        <div class="container">
+            <asp:Panel ID="pnlDetail" runat="server" CssClass="card" Visible="false">
+                <h1 class="title">Chi tiết lịch hẹn</h1>
 
-            <div class="info-group">
-                <span class="info-label">⏰ Thời gian:</span>
-                <div class="info-content" id="lblThoiGian" runat="server"></div>
-            </div>
-
-            <div class="info-group">
-                <span class="info-label">👤 Khách hàng:</span>
-                <div class="info-content" id="lblKhachHang" runat="server"></div>
-            </div>
-
-            <div class="info-group">
-                <span class="info-label">📱 Số điện thoại:</span>
-                <div class="info-content" id="lblSoDienThoai" runat="server"></div>
-            </div>
-
-            <div class="info-group">
-                <span class="info-label">💆‍♀️ Dịch vụ:</span>
-                <div class="info-content" id="lblDichVu" runat="server"></div>
-            </div>
-
-            <div class="info-group">
-                <span class="info-label">👩‍💼 Nhân viên:</span>
-                <div class="info-content" id="lblNhanVien" runat="server"></div>
-            </div>
-
-            <div class="info-group">
-                <span class="info-label">📊 Trạng thái:</span>
-                <div class="info-content">
-                    <span id="lblTrangThai" runat="server" class="status-badge"></span>
+                <div class="info-row">
+                    <span class="info-label">Thời gian</span>
+                    <div class="info-value"><span id="lblThoiGian" runat="server"></span></div>
                 </div>
-            </div>
 
-            <div class="action-group">
-                <asp:Button ID="btnCheckin" runat="server" Text="✅ Check-in" 
-                           CssClass="btn btn-checkin" OnClick="btnCheckin_Click" />
-                <asp:Button ID="btnCancel" runat="server" Text="❌ Hủy lịch" 
-                           CssClass="btn btn-cancel" OnClick="btnCancel_Click" />
-                <a href="admin_appointment.aspx" class="btn btn-close">✕ Đóng</a>
-            </div>
-        </asp:Panel>
+                <div class="info-row">
+                    <span class="info-label">Khách hàng</span>
+                    <div class="info-value"><span id="lblKhachHang" runat="server"></span></div>
+                </div>
 
-        <asp:Panel ID="pnlNoData" runat="server" CssClass="detail-card no-data" Visible="false">
-            <i class="fa-solid fa-calendar-xmark"></i>
-            <div style="font-size: 20px; margin-top: 10px;">Không tìm thấy lịch hẹn!</div>
-            <a href="admin_appointment.aspx" class="btn" style="background: #f04581; color: white; 
-                margin-top: 20px; display: inline-block; width: auto; padding: 12px 30px;">
-                Quay lại danh sách
-            </a>
-        </asp:Panel>
+                <div class="info-row">
+                    <span class="info-label">Số điện thoại</span>
+                    <div class="info-value"><span id="lblSoDienThoai" runat="server"></span></div>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Dịch vụ</span>
+                    <div class="info-value"><span id="lblDichVu" runat="server"></span></div>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Nhân viên</span>
+                    <div class="info-value"><span id="lblNhanVien" runat="server"></span></div>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Tổng tiền</span>
+                    <div class="info-value"><span id="lblTongTien" runat="server"></span></div>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Trạng thái</span>
+                    <div class="info-value">
+                        <span id="lblTrangThai" runat="server" class="status-badge">
+                            <span id="lblTrangThaiText" runat="server"></span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Cập nhật</span>
+                    <div class="info-value"><span id="lblUpdatedAt" runat="server"></span></div>
+                </div>
+
+                <div class="actions">
+                    <asp:LinkButton ID="btnCheckin" runat="server" CssClass="btn btn-success" OnClick="btnCheckin_Click">
+                        Check-in
+                    </asp:LinkButton>
+
+                    <asp:LinkButton ID="btnCancel" runat="server" CssClass="btn btn-danger" OnClick="btnCancel_Click">
+                        Hủy
+                    </asp:LinkButton>
+
+                    <asp:LinkButton ID="btnComplete" runat="server" CssClass="btn btn-purple" OnClick="btnComplete_Click">
+                        Hoàn thành
+                    </asp:LinkButton>
+
+                    <a href="admin_appointment.aspx" class="btn btn-secondary">
+                        Quay lại
+                    </a>
+                </div>
+            </asp:Panel>
+
+            <asp:Panel ID="pnlNoData" runat="server" CssClass="card no-data" Visible="false">
+                <h2>Không tìm thấy lịch hẹn</h2>
+                <p>ID không hợp lệ hoặc lịch hẹn đã bị xóa</p>
+                <a href="admin_appointment.aspx" class="btn btn-success">
+                    Quay lại danh sách
+                </a>
+            </asp:Panel>
+        </div>
     </form>
 </body>
 </html>
