@@ -47,7 +47,7 @@
     <a href="admin_appointment.aspx" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Quản lý lịch hẹn</a>
     <a href="admin_customer.aspx" class="nav-item"><i class="fa-solid fa-users"></i> Quản lý khách hàng</a>
     <a href="admin_staff.aspx" class="nav-item"><i class="fa-solid fa-user-tie"></i> Quản lý nhân sự</a>
-    <a href="#" class="nav-item"><i class="fa-solid fa-spa"></i> Quản lý dịch vụ</a>
+    <a href="admin_service.aspx" class="nav-item"><i class="fa-solid fa-spa"></i> Quản lý dịch vụ</a>
 </nav>
                 <a href="../client/login.aspx" class="nav-item logout-item"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
             </aside>

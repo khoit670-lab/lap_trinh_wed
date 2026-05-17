@@ -62,7 +62,7 @@ namespace lap_trinh_wed.client
             }
         }
 
-        // ✅ THÊM MỚI: Profile cho ADMIN/NHAN SỰ
+        // ✅ SỬA: Profile cho ADMIN/NHAN SỰ + Load lịch hẹn
         private void LoadProfileNhanSu()
         {
             try
@@ -93,6 +93,9 @@ namespace lap_trinh_wed.client
                     }
                 }
                 ltrName.Text = tenKhachHang;
+
+                // ✅ THÊM: Load lịch hẹn cho nhân sự
+                LoadLichHenSapToiNhanSu(nhanSuId);
             }
             catch (Exception ex)
             {
@@ -174,6 +177,39 @@ namespace lap_trinh_wed.client
             catch (Exception ex) { System.Diagnostics.Debug.WriteLine("LoadLichHenSapToi: " + ex.Message); }
         }
 
+        // ✅ THÊM MỚI: Load lịch hẹn sắp tới cho NHÂN SỰ
+        private void LoadLichHenSapToiNhanSu(int nhanSuId)
+        {
+            try
+            {
+                using (var conn = new SqlConnection(_conn))
+                {
+                    var cmd = new SqlCommand(@"
+                        SELECT lh.id, lh.ma_lich_hen, lh.ngay_hen, lh.gio_hen, lh.trang_thai,
+                               ISNULL(STRING_AGG(dv.ten_dich_vu, N', '), N'Chưa chọn dịch vụ') AS ten_dich_vu,
+                               kh.ho_va_ten AS ten_khach_hang
+                        FROM lich_hen lh
+                        LEFT JOIN lich_hen_chi_tiet lhct ON lhct.lich_hen_id = lh.id
+                        LEFT JOIN dich_vu dv ON lhct.dich_vu_id = dv.id
+                        LEFT JOIN khach_hang kh ON lh.khach_hang_id = kh.id
+                        WHERE lh.nhan_su_id = @id AND lh.trang_thai NOT IN (N'Hoàn thành', N'Hủy')
+                        GROUP BY lh.id, lh.ma_lich_hen, lh.ngay_hen, lh.gio_hen, lh.trang_thai, kh.ho_va_ten
+                        ORDER BY lh.ngay_hen ASC", conn);
+
+                    cmd.Parameters.AddWithValue("@id", nhanSuId);
+                    conn.Open();
+                    var da = new SqlDataAdapter(cmd);
+                    var dt = new DataTable();
+                    da.Fill(dt);
+
+                    rptLichHenSapToi.DataSource = dt;
+                    rptLichHenSapToi.DataBind();
+                    pnlKhongCoLich.Visible = (dt.Rows.Count == 0);
+                }
+            }
+            catch (Exception ex) { System.Diagnostics.Debug.WriteLine("LoadLichHenSapToiNhanSu: " + ex.Message); }
+        }
+
         private void LoadLichSuDichVu(int khachId)
         {
             try
@@ -232,7 +268,7 @@ namespace lap_trinh_wed.client
             catch (Exception ex) { System.Diagnostics.Debug.WriteLine("LoadVoucherUuDai: " + ex.Message); }
         }
 
-        // ── Các sự kiện GIỮ NGUYÊN ──────────────────────────────
+        // ── Các sự kiện  ──────────────────────────────
         protected void rptLichHenSapToi_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName != "HuyLich") return;
@@ -278,7 +314,7 @@ namespace lap_trinh_wed.client
             Response.Redirect("login.aspx");
         }
 
-        // ── Helpers GIỮ NGUYÊN ──────────────────────────────────
+        // ── Helpers  ──────────────────────────────────
         protected string NgayHen(object ngay) => Convert.ToDateTime(ngay).Day.ToString();
         protected string ThangHen(object ngay) => "Th" + Convert.ToDateTime(ngay).Month;
         protected string NamHen(object ngay) => Convert.ToDateTime(ngay).Year.ToString();

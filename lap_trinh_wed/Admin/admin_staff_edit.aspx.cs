@@ -1,40 +1,136 @@
 ﻿using System;
-using System.Web;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Web.UI;
 
 namespace lap_trinh_wed.admin
 {
-    public partial class admin_staff_edit : System.Web.UI.Page
+    public partial class admin_staff_edit : Page
     {
+        private readonly string _conn = ConfigurationManager.ConnectionStrings["LilySpaDB"].ConnectionString;
+        protected int nhanSuId = 0;
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            // Sửa lỗi HttpCachePolicy
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.Cache.SetNoStore();
+            if (Session["VaiTro"] == null)
+            {
+                Response.Redirect("../client/login.aspx");
+                return;
+            }
+
+            if (!int.TryParse(Request.QueryString["id"], out nhanSuId) || nhanSuId <= 0)
+            {
+                Response.Redirect("admin_staff.aspx");
+                return;
+            }
 
             if (!IsPostBack)
+                LoadChiTiet(nhanSuId);
+        }
+
+        private void LoadChiTiet(int id)
+        {
+            try
             {
-                // Logic lấy ID nhân viên từ URL và nạp dữ liệu cũ vào các TextBox
-                if (Request.QueryString["id"] != null)
+                using (var conn = new SqlConnection(_conn))
                 {
-                    string staffId = Request.QueryString["id"];
-                    // LoadCurrentStaffData(staffId);
+                    var cmd = new SqlCommand(@"
+                        SELECT ho_va_ten, so_dien_thoai, chuc_vu, 
+                               ISNULL(trang_thai, N'Đang làm') AS trang_thai,
+                               ISNULL(ghi_chu, N'') AS ghi_chu,
+                               ISNULL(ca_lam_viec, N'') AS ca_lam_viec
+                        FROM nhan_su WHERE id = @id", conn);
+
+                    cmd.Parameters.AddWithValue("@id", id);
+                    conn.Open();
+
+                    using (var r = cmd.ExecuteReader())
+                    {
+                        if (!r.Read()) return;
+
+                        txtName.Text = r["ho_va_ten"].ToString();
+                        txtPhone.Text = r["so_dien_thoai"].ToString();
+                        txtPosition.Text = r["chuc_vu"].ToString();
+                        ddlStatus.SelectedValue = r["trang_thai"].ToString();
+                        txtShift.Text = r["ca_lam_viec"].ToString();
+                        txtNote.Text = r["ghi_chu"].ToString();
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine("LoadChiTiet Error: " + ex.Message);
             }
         }
 
-        protected void btnUpdate_Click(object sender, EventArgs e)
+        protected void btnSave_Click(object sender, EventArgs e)
         {
-            // Lấy thông tin mới từ các ô TextBox
-            string updatedName = txtStaffName.Text;
-            string updatedPhone = txtStaffPhone.Text;
-            string updatedPosition = txtStaffPosition.Text;
-            string updatedStatus = txtStaffStatus.Text;
-            string updatedNotes = txtStaffEvaluation.Text;
+            string hoTen = txtName.Text.Trim();
+            string sdt = txtPhone.Text.Trim().Replace(" ", "").Replace("-", "").Replace(".", "");
+            string chucVu = txtPosition.Text.Trim();
+            string trangThai = ddlStatus.SelectedValue;
+            string caLam = txtShift.Text.Trim();
+            string ghiChu = txtNote.Text.Trim();
 
-            // Thực hiện SQL UPDATE nhân sự tại đây...
+            // Validate
+            if (string.IsNullOrEmpty(hoTen))
+            {
+                ShowAlert("Tên nhân sự không được để trống.");
+                return;
+            }
+            if (sdt.Length < 10 || sdt.Length > 11 || !long.TryParse(sdt, out _))
+            {
+                ShowAlert("Số điện thoại không hợp lệ (10–11 chữ số).");
+                return;
+            }
 
-            // Thông báo và quay lại trang danh sách
-            Response.Write("<script>alert('Đã cập nhật thông tin nhân sự thành công!'); window.location='admin_staff.aspx';</script>");
+            try
+            {
+                using (var conn = new SqlConnection(_conn))
+                {
+                    // Check duplicate phone
+                    var cmdCheck = new SqlCommand(
+                        "SELECT COUNT(*) FROM nhan_su WHERE so_dien_thoai=@sdt AND id!=@id", conn);
+                    cmdCheck.Parameters.AddWithValue("@sdt", sdt);
+                    cmdCheck.Parameters.AddWithValue("@id", nhanSuId);
+                    conn.Open();
+
+                    if (Convert.ToInt32(cmdCheck.ExecuteScalar()) > 0)
+                    {
+                        ShowAlert("Số điện thoại này đã được sử dụng.");
+                        return;
+                    }
+
+                    // Update
+                    var cmdUpd = new SqlCommand(@"
+                        UPDATE nhan_su SET 
+                            ho_va_ten=@ten, so_dien_thoai=@sdt, chuc_vu=@cv,
+                            trang_thai=@tt, ca_lam_viec=@cl, ghi_chu=@gc, updated_at=GETDATE()
+                        WHERE id=@id", conn);
+
+                    cmdUpd.Parameters.AddWithValue("@ten", hoTen);
+                    cmdUpd.Parameters.AddWithValue("@sdt", sdt);
+                    cmdUpd.Parameters.AddWithValue("@cv", string.IsNullOrEmpty(chucVu) ? (object)DBNull.Value : chucVu);
+                    cmdUpd.Parameters.AddWithValue("@tt", trangThai);
+                    cmdUpd.Parameters.AddWithValue("@cl", string.IsNullOrEmpty(caLam) ? (object)DBNull.Value : caLam);
+                    cmdUpd.Parameters.AddWithValue("@gc", string.IsNullOrEmpty(ghiChu) ? (object)DBNull.Value : ghiChu);
+                    cmdUpd.Parameters.AddWithValue("@id", nhanSuId);
+
+                    cmdUpd.ExecuteNonQuery();
+                }
+
+                string script = $"alert('✅ Cập nhật thành công!');window.location='admin_staff_detail.aspx?id={nhanSuId}';";
+                ClientScript.RegisterStartupScript(GetType(), "save_ok", script, true);
+            }
+            catch (Exception ex)
+            {
+                ShowAlert("Lỗi: " + ex.Message);
+            }
+        }
+
+        private void ShowAlert(string msg)
+        {
+            ClientScript.RegisterStartupScript(GetType(), "alert", $"alert('{msg.Replace("'", "\\'")}');", true);
         }
     }
 }

@@ -4,102 +4,227 @@
 <html>
 <head runat="server">
     <meta charset="UTF-8">
-    <title>Lily Spa - Thêm nhân sự mới</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <title>Thêm nhân sự mới</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: #f8f9fa; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-
-        .add-card {
-            background: #fff; width: 600px; border-radius: 30px;
-            padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+        body { 
+            background: var(--gray-50);
+            font-family: system-ui, -apple-system, sans-serif;
+            color: var(--gray-900);
+            padding: 2rem;
+            line-height: 1.5;
+            min-height: 100vh;
         }
 
-        .title-screen { font-size: 36px; font-weight: bold; text-align: center; margin-bottom: 35px; color: #000; }
+        :root {
+            --primary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+        }
 
-        /* Header: Photo Placeholder + Input Fields */
-        .profile-header { display: flex; gap: 25px; margin-bottom: 30px; }
-        .photo-placeholder {
-            width: 150px; height: 180px; border: 1px solid #ffcad4;
-            border-radius: 15px; background: #fff; display: flex; align-items: center; justify-content: center;
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .edit-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
+        }
+
+        .title-screen { 
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            text-align: center;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.025em;
+        }
+
+        .input-fields { 
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .input-group label { 
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 1rem;
         }
         
-        .input-group { flex: 1; display: flex; flex-direction: column; gap: 10px; }
-        .input-row { display: flex; align-items: center; gap: 10px; }
-        .label-text { font-size: 18px; font-weight: 600; white-space: nowrap; width: 130px; }
-        
-        .txt-input { 
-            flex: 1; padding: 8px 12px; border: 1px solid #999; border-radius: 5px; 
-            font-size: 16px; outline: none; 
+        .txt-input, .txt-area { 
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: white;
+            font-weight: 500;
         }
 
-        /* Ghi chú & Ca làm việc */
-        .full-width-section { margin-bottom: 25px; }
-        .section-label { font-size: 18px; font-weight: bold; margin-bottom: 10px; display: block; }
+        .txt-input:focus, .txt-area:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .notes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
         .txt-area { 
-            width: 100%; padding: 10px; border: 1px solid #999; border-radius: 5px; 
-            font-size: 16px; outline: none; height: 40px;
+            height: 120px;
+            resize: vertical;
+            font-family: inherit;
         }
 
-        .shift-display {
-            background: #fff; border: 1px solid #f0f0f0; border-radius: 20px;
-            padding: 15px 25px; font-size: 18px; color: #333;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        .status-select {
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: white;
+            font-weight: 500;
+            cursor: pointer;
         }
 
-        /* Footer Buttons */
-        .footer-actions { display: flex; gap: 20px; margin-top: 30px; }
+        .status-select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+        }
+
+        .footer-actions { 
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
         .btn {
-            flex: 1; padding: 12px; border-radius: 20px; border: 1px solid #999;
-            font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.2s;
-            text-align: center; text-decoration: none; color: #000; background: #d9d9d9;
+            padding: 0.875rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+            flex: 1;
+            max-width: 200px;
+            text-align: center;
         }
-        .btn:hover { background: #ccc; }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary { 
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-secondary { 
+            background: var(--gray-100); 
+            color: var(--gray-700); 
+            border: 1px solid var(--gray-200);
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 1rem; }
+            .edit-card { padding: 2rem; }
+            .title-screen { font-size: 1.875rem; }
+            .stats-grid, .notes-grid { grid-template-columns: 1fr; }
+            .footer-actions { flex-direction: column; }
+            .btn { max-width: none; }
+        }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
-        <div class="add-card">
-            <h1 class="title-screen">Quản lý Nhân sự</h1>
+        <div class="container">
+            <div class="edit-card">
+                <h1 class="title-screen">Thêm nhân sự mới</h1>
 
-            <div class="profile-header">
-                <div class="photo-placeholder">
+                <div class="input-fields">
+                    <div class="input-group">
+                        <label for="txtName">Họ và tên <span style="color: var(--danger);">*</span></label>
+                        <asp:TextBox ID="txtName" runat="server" CssClass="txt-input" 
+                            placeholder="Nhập họ và tên đầy đủ"></asp:TextBox>
                     </div>
-                <div class="input-group">
-                    <div class="input-row">
-                        <span class="label-text">Tên nhân sự :</span>
-                        <asp:TextBox ID="txtName" runat="server" CssClass="txt-input"></asp:TextBox>
-                    </div>
-                    <div class="input-row">
-                        <span class="label-text">Số điện thoại :</span>
-                        <asp:TextBox ID="txtPhone" runat="server" CssClass="txt-input"></asp:TextBox>
-                    </div>
-                    <div class="input-row">
-                        <span class="label-text">Chức vụ : .</span>
-                        <asp:TextBox ID="txtPosition" runat="server" CssClass="txt-input"></asp:TextBox>
-                    </div>
-                    <div class="input-row">
-                        <span class="label-text">Trạng thái :</span>
-                        <asp:TextBox ID="txtStatus" runat="server" CssClass="txt-input"></asp:TextBox>
+
+                    <div class="input-group">
+                        <label for="txtPhone">Số điện thoại <span style="color: var(--danger);">*</span></label>
+                        <asp:TextBox ID="txtPhone" runat="server" CssClass="txt-input" 
+                            placeholder="0987xxx xxx"></asp:TextBox>
                     </div>
                 </div>
-            </div>
 
-            <div class="full-width-section">
-                <span class="section-label">Ghi chú / Đánh giá</span>
-                <asp:TextBox ID="txtNotes" runat="server" CssClass="txt-area"></asp:TextBox>
-            </div>
-
-            <div class="full-width-section">
-                <span class="section-label">Ca làm việc</span>
-                <div class="shift-display">
-                    <asp:Literal ID="ltrShiftDefault" runat="server" Text="Ca full (7h - 18h)"></asp:Literal>
+                <div class="stats-grid">
+                    <div class="input-group">
+                        <label for="txtPosition">Chức vụ</label>
+                        <asp:TextBox ID="txtPosition" runat="server" CssClass="txt-input" 
+                            placeholder="VD: Lễ tân, Kỹ thuật viên..."></asp:TextBox>
+                    </div>
+                    <div class="input-group">
+                        <label for="ddlStatus">Trạng thái <span style="color: var(--danger);">*</span></label>
+                        <asp:DropDownList ID="ddlStatus" runat="server" CssClass="status-select">
+                            <asp:ListItem Value="" Text="-- Chọn trạng thái --"></asp:ListItem>
+                            <asp:ListItem Value="Đang làm">Đang làm</asp:ListItem>
+                            <asp:ListItem Value="Tạm nghỉ">Tạm nghỉ</asp:ListItem>
+                            <asp:ListItem Value="Nghỉ việc">Nghỉ việc</asp:ListItem>
+                        </asp:DropDownList>
+                    </div>
                 </div>
-            </div>
 
-            <div class="footer-actions">
-                <asp:Button ID="btnAddStaff" runat="server" Text="+ Thêm nhân sự" CssClass="btn" OnClick="btnAddStaff_Click" />
-                <a href="admin_staff.aspx" class="btn">Đóng</a>
+                <div class="notes-grid">
+                    <div class="input-group">
+                        <label for="txtShift">Ca làm việc</label>
+                        <asp:TextBox ID="txtShift" runat="server" CssClass="txt-input" 
+                            placeholder="VD: Ca sáng (7h-14h), Ca full..."></asp:TextBox>
+                    </div>
+                    <div class="input-group">
+                        <label for="txtNote">Ghi chú nội bộ</label>
+                        <asp:TextBox ID="txtNote" runat="server" TextMode="MultiLine" CssClass="txt-area" 
+                            placeholder="Đánh giá ban đầu, lưu ý đặc biệt..."></asp:TextBox>
+                    </div>
+                </div>
+
+                <div class="footer-actions">
+                    <asp:Button ID="btnSave" runat="server" Text="Thêm nhân sự" CssClass="btn btn-primary" OnClick="btnSave_Click" />
+                    <a href="admin_staff.aspx" class="btn btn-secondary">Hủy bỏ</a>
+                </div>
             </div>
         </div>
     </form>

@@ -33,58 +33,67 @@ namespace lap_trinh_wed.admin
         protected global::System.Web.UI.WebControls.Panel pnlDetail;
 
         /// <summary>
-        /// lblServiceName control.
+        /// ltrServiceName control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblServiceName;
+        protected global::System.Web.UI.WebControls.Literal ltrServiceName;
 
         /// <summary>
-        /// lblType control.
+        /// ltrType control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblType;
+        protected global::System.Web.UI.WebControls.Literal ltrType;
 
         /// <summary>
-        /// lblTime control.
+        /// ltrTime control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTime;
+        protected global::System.Web.UI.WebControls.Literal ltrTime;
 
         /// <summary>
-        /// lblPrice control.
+        /// ltrPrice control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblPrice;
+        protected global::System.Web.UI.WebControls.Literal ltrPrice;
 
         /// <summary>
-        /// lblDesc control.
+        /// lblTrangThai control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblDesc;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl lblTrangThai;
 
         /// <summary>
-        /// btnEdit control.
+        /// ltrStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnEdit;
+        protected global::System.Web.UI.WebControls.Literal ltrStatus;
+
+        /// <summary>
+        /// ltrDesc control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal ltrDesc;
 
         /// <summary>
         /// pnlNoData control.

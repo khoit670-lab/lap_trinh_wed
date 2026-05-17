@@ -1,83 +1,324 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="admin_service_detail.aspx.cs" Inherits="lap_trinh_wed.admin.admin_service_detail" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="admin_staff_detail.aspx.cs" Inherits="lap_trinh_wed.admin.admin_staff_detail" %>
 
 <!DOCTYPE html>
 <html>
 <head runat="server">
     <meta charset="UTF-8">
-    <title>Lily Spa - Chi tiết dịch vụ</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết nhân sự</title>
     <style>
-        /* Style tập trung vào Card nằm giữa màn hình như mockup nhân sự */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        :root {
+            --primary: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --pink: #f04581;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body { 
-            background-color: #f8f9fa; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            padding: 20px; 
+            background: var(--gray-50);
+            font-family: system-ui, -apple-system, sans-serif;
+            color: var(--gray-900);
+            padding: 2rem;
+            line-height: 1.5;
         }
 
-        .detail-card {
-            background: #fff; width: 600px; border-radius: 30px;
-            padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        .title-screen { font-size: 36px; font-weight: bold; text-align: center; margin-bottom: 35px; color: #000; }
-
-        /* Header: Ảnh dịch vụ + Thông tin chính */
-        .profile-header { display: flex; gap: 30px; margin-bottom: 35px; align-items: flex-start; }
-        .avatar-box {
-            width: 150px; height: 180px; border: 1px solid #ffcad4;
-            border-radius: 15px; background: #fff; display: flex; align-items: center; justify-content: center;
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
         }
-        .avatar-box i { font-size: 80px; color: #f0f0f0; }
 
-        .info-text h2 { font-size: 24px; font-weight: bold; margin-bottom: 15px; }
-        .info-line { font-size: 19px; margin-bottom: 12px; display: block; color: #333; }
-        .info-line strong { font-weight: 600; }
+        .title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            text-align: center;
+            margin-bottom: 2.5rem;
+            letter-spacing: -0.025em;
+        }
 
-        /* Phần mô tả / công dụng */
-        .section-title { font-size: 20px; font-weight: bold; margin-bottom: 10px; display: block; }
-        .note-text { font-size: 16px; color: #666; margin-bottom: 25px; line-height: 1.5; }
+        .info-row {
+            display: flex;
+            align-items: center;
+            padding: 1.25rem 0;
+            border-bottom: 1px solid var(--gray-200);
+        }
 
-        /* Nút Footer màu xám đặc trưng */
-        .footer-actions { display: flex; justify-content: center; margin-top: 20px; }
+        .info-row:last-child { border-bottom: none; }
+
+        .info-label {
+            font-weight: 500;
+            color: var(--gray-700);
+            min-width: 140px;
+            font-size: 0.95rem;
+        }
+
+        .info-value {
+            flex: 1;
+            font-weight: 500;
+            color: var(--gray-900);
+            font-size: 1rem;
+        }
+
+        .rank-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .rank-staff { 
+            background: #ecfdf5; 
+            color: #166534; 
+            border: 1px solid #bbf7d0;
+        }
+        .rank-manager { 
+            background: linear-gradient(135deg, #fef3c7, #fde68a); 
+            color: #b45309; 
+            border: 1px solid #fcd34d;
+        }
+
+        .status-active { 
+            background: #ecfdf5; 
+            color: #166534; 
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 1px solid #bbf7d0;
+        }
+        .status-inactive { 
+            background: #fef2f2; 
+            color: #dc2626; 
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 1px solid #fecaca;
+        }
+
+        .history-section {
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .history-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 1.5rem;
+        }
+
+        .history-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .history-item {
+            background: var(--gray-50);
+            padding: 1.25rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--success);
+        }
+
+        .history-date {
+            font-weight: 600;
+            color: var(--gray-900);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .history-details {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-history {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-600);
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--gray-200);
+            flex-wrap: wrap;
+        }
+
         .btn {
-            width: 50%; padding: 15px; border-radius: 20px; border: 1px solid #999;
-            font-size: 20px; font-weight: bold; cursor: pointer; transition: 0.3s;
-            text-align: center; text-decoration: none; color: #000; background: #d9d9d9;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .btn:hover { background: #ccc; }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-purple { background: var(--purple); color: white; }
+        .btn-secondary { 
+            background: var(--gray-100); 
+            color: var(--gray-700); 
+            border: 1px solid var(--gray-200);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .no-data h2 { 
+            font-size: 1.5rem; 
+            color: var(--gray-900); 
+            margin-bottom: 0.5rem;
+        }
+
+        .no-data p { 
+            color: var(--gray-600); 
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 640px) {
+            body { padding: 1rem; }
+            .card { padding: 2rem; }
+            .title { font-size: 1.875rem; }
+            .info-row { flex-direction: column; align-items: flex-start; gap: 0.25rem; padding: 1rem 0; }
+            .info-label { min-width: auto; }
+            .actions { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+        }
     </style>
 </head>
 <body>
     <form id="form1" runat="server">
-        <div class="detail-card">
-            <h1 class="title-screen">Quản lý dịch vụ</h1>
+        <div class="container">
+            <asp:Panel ID="pnlDetail" runat="server" CssClass="card" Visible="false">
+                <h1 class="title">Chi tiết nhân sự</h1>
 
-            <div class="profile-header">
-                <div class="avatar-box">
-                    <i class="fa-solid fa-spa"></i>
+                <div class="info-row">
+                    <span class="info-label">Họ và tên</span>
+                    <div class="info-value">
+                        <asp:Literal ID="ltrFullName" runat="server"></asp:Literal>
+                    </div>
                 </div>
-                <div class="info-text">
-                    <h2>Tên dịch vụ : <asp:Literal ID="ltrServiceName" runat="server" Text="chăm sóc da"></asp:Literal></h2>
-                    <span class="info-line">loại : <strong><asp:Literal ID="ltrType" runat="server" Text="Chăm sóc da."></asp:Literal></strong></span>
-                    <span class="info-line">Thời gian : <strong><asp:Literal ID="ltrTime" runat="server" Text="60'"></asp:Literal></strong></span>
-                    <span class="info-line">Giá tiền : <strong><asp:Literal ID="ltrPrice" runat="server" Text="1.000.000"></asp:Literal></strong></span>
+
+                <div class="info-row">
+                    <span class="info-label">Số điện thoại</span>
+                    <div class="info-value">
+                        <asp:Literal ID="ltrPhone" runat="server"></asp:Literal>
+                    </div>
                 </div>
-            </div>
 
-            <div class="evaluation-section">
-                <span class="section-title">Mô tả / Công dụng :</span>
-                <p class="note-text">
-                    <asp:Literal ID="ltrDesc" runat="server" Text="Làm cho da sáng hơn và mịn màng"></asp:Literal>
-                </p>
-            </div>
+                <div class="info-row">
+                    <span class="info-label">Chức vụ</span>
+                    <div class="info-value">
+                        <span id="lblChucVu" runat="server" class="rank-badge rank-staff">
+                            <asp:Literal ID="ltrPosition" runat="server"></asp:Literal>
+                        </span>
+                    </div>
+                </div>
 
-            <div class="footer-actions">
-                <a href="admin_service.aspx" class="btn">Đóng</a>
-            </div>
+                <div class="info-row">
+                    <span class="info-label">Ca làm việc</span>
+                    <div class="info-value">
+                        <asp:Literal ID="ltrShift" runat="server"></asp:Literal>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Trạng thái</span>
+                    <div class="info-value">
+                        <span id="lblTrangThai" runat="server" class="status-active">
+                            <asp:Literal ID="ltrStatus" runat="server"></asp:Literal>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="info-row">
+                    <span class="info-label">Ghi chú</span>
+                    <div class="info-value">
+                        <asp:Literal ID="ltrNote" runat="server"></asp:Literal>
+                    </div>
+                </div>
+
+                <!-- Lịch sử làm việc -->
+                <div class="history-section">
+                    <h2 class="history-title">Lịch sử lịch hẹn gần đây</h2>
+                    <asp:Panel ID="pnlHistory" runat="server">
+                        <asp:Repeater ID="rptHistory" runat="server">
+                            <ItemTemplate>
+                                <div class="history-item">
+                                    <div class="history-date">
+                                        <%# Eval("ngay_hen", "{0:dd/MM/yyyy HH:mm}") %>
+                                    </div>
+                                    <div class="history-details">
+                                        Dịch vụ: <%# Eval("ten_dich_vu") %>
+                                    </div>
+                                    <div class="history-details">
+                                        Khách hàng: <%# Eval("ho_ten_khach") %>
+                                    </div>
+                                </div>
+                            </ItemTemplate>
+                        </asp:Repeater>
+                    </asp:Panel>
+                    <asp:Panel ID="pnlNoHistory" runat="server" CssClass="no-history" Visible="false">
+                        Chưa có lịch hẹn nào
+                    </asp:Panel>
+                </div>
+
+                <div class="actions">
+                    <a href='<%= "admin_staff_edit.aspx?id=" + nhanSuId %>' class="btn btn-purple">
+                        ✏️ Chỉnh sửa
+                    </a>
+                    <a href="admin_staff.aspx" class="btn btn-secondary">
+                        Quay lại
+                    </a>
+                </div>
+            </asp:Panel>
+
+            <asp:Panel ID="pnlNoData" runat="server" CssClass="card no-data" Visible="false">
+                <h2>Không tìm thấy nhân sự</h2>
+                <p>ID không hợp lệ hoặc nhân sự đã bị xóa</p>
+                <a href="admin_staff.aspx" class="btn btn-purple">
+                    Quay lại danh sách
+                </a>
+            </asp:Panel>
         </div>
     </form>
 </body>
